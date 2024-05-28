@@ -45,22 +45,28 @@ public class MainActivity extends AppCompatActivity {
         View view = getLayoutInflater().inflate(R.layout.dialog_add_user, null);
         final EditText editTextName = view.findViewById(R.id.editTextName);
         final EditText editTextEmail = view.findViewById(R.id.editTextEmail);
+        final EditText editTextNim = view.findViewById(R.id.editTextNIM);
+        final EditText editTextNoHp = view.findViewById(R.id.editTextNoHp);
+        final EditText editTextAlamat = view.findViewById(R.id.editTextAlamat);
         builder.setView(view);
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String name = editTextName.getText().toString();
                 String email = editTextEmail.getText().toString();
-                addUser(name, email);
+                String nim = editTextNim.getText().toString();
+                String nohp = editTextNoHp.getText().toString();
+                String alamat = editTextAlamat.getText().toString();
+                addUser(name, email, nim, nohp, alamat);
             }
         });
         builder.setNegativeButton("Cancel", null);
         builder.create().show();
     }
 
-    private void addUser(String name, String email) {
+    private void addUser(String name, String email, String nim, String nohp, String alamat) {
         ApiService apiService = ApiClient.getClient().create(ApiService.class);
-        User user = new User(name, email);
+        User user = new User(name, email, nim, nohp, alamat);
         Call<Void> call = apiService.insertUser(user);
         call.enqueue(new Callback<Void>() {
             @Override

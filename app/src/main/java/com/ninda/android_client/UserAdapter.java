@@ -27,6 +27,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         User user = userList.get(position);
         holder.textViewName.setText(user.getName());
         holder.textViewEmail.setText(user.getEmail());
+        holder.textViewNim.setText(user.getNim());
+        holder.textViewNoHp.setText(user.getNohp());
+        holder.textViewAlamat.setText(user.getAlamat());
     }
 
     @Override
@@ -37,11 +40,17 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public static class UserViewHolder extends RecyclerView.ViewHolder {
         TextView textViewName;
         TextView textViewEmail;
+        TextView textViewNim;
+        TextView textViewNoHp;
+        TextView textViewAlamat;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewName = itemView.findViewById(R.id.textViewName);
             textViewEmail = itemView.findViewById(R.id.textViewEmail);
+            textViewNim = itemView.findViewById(R.id.textViewNIM);
+            textViewNoHp = itemView.findViewById(R.id.textViewNoHp);
+            textViewAlamat = itemView.findViewById(R.id.textViewAlamat);
         }
     }
 }

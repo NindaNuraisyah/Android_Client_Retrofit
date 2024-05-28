@@ -9,11 +9,29 @@
         android:id="@+id/editTextName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Name" />
+        android:hint="@string/name" />
 
     <EditText
         android:id="@+id/editTextEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email" />
+        android:hint="@string/email" />
+
+    <EditText
+        android:id="@+id/editTextNIM"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/nim" />
+
+    <EditText
+        android:id="@+id/editTextNoHp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/nohp" />
+
+    <EditText
+        android:id="@+id/editTextAlamat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/alamat" />
 </LinearLayout>
