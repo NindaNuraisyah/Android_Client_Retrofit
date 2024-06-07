@@ -2,7 +2,10 @@ package com.ninda.android_client;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,15 +30,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        userAdapter = new UserAdapter(userList);
+
+        userAdapter = new UserAdapter(userList, this);
         recyclerView.setAdapter(userAdapter);
+
+        // Set the MainActivity reference in the adapter
+        userAdapter.setMainActivity(this);
+
         findViewById(R.id.button_add).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 showAddUserDialog();
             }
         });
+
         fetchUsers();
     }
 
@@ -105,5 +116,72 @@ public class MainActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void updateUser(int id, String name, String email, String nim, String nohp, String alamat) {
+        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+        User user = new User(id, name, email, nim, nohp, alamat);
+        Call<Void> call = apiService.updateUser(user);
+
+        Log.d("MainActivity", "Updating user: " + id + ", " + name + ", " + email + ", " + nim + ", " + nohp + ", " + alamat);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.d("MainActivity", "User updated successfully");
+                    Toast.makeText(MainActivity.this, "User updated successfully", Toast.LENGTH_SHORT).show();
+                    fetchUsers();
+                } else {
+                    Log.e("MainActivity", "Response error: " + response.errorBody().toString());
+                    Toast.makeText(MainActivity.this, "Failed to update user: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("MainActivity", "Fetch error: ", t);
+                Toast.makeText(MainActivity.this, "Failed to update user: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    public void showUpdateDialog(final User user) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Update User");
+        View viewInflated = LayoutInflater.from(this).inflate(R.layout.dialog_update_user, (ViewGroup)
+                findViewById(android.R.id.content), false);
+        final EditText inputName = viewInflated.findViewById(R.id.editTextName);
+        final EditText inputEmail = viewInflated.findViewById(R.id.editTextEmail);
+        final EditText inputNim = viewInflated.findViewById(R.id.editTextNIM);
+        final EditText inputNohp = viewInflated.findViewById(R.id.editTextNoHp);
+        final EditText inputAlamat = viewInflated.findViewById(R.id.editTextAlamat);
+        inputName.setText(user.getName());
+        inputEmail.setText(user.getEmail());
+        inputNim.setText(user.getNim());
+        inputNohp.setText(user.getNohp());
+        inputAlamat.setText(user.getAlamat());
+        builder.setView(viewInflated);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                String name = inputName.getText().toString();
+                String email = inputEmail.getText().toString();
+                String nim = inputNim.getText().toString();
+                String nohp = inputNohp.getText().toString();
+                String alamat = inputAlamat.getText().toString();
+                updateUser(user.getId(), name, email, nim, nohp, alamat);
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+    public void refreshData() {
+        fetchUsers();
     }
 }
