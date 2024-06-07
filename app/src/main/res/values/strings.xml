@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">Android_Client</string>
-    <string name="name">Name</string>
+    <string name="app_name">Data User</string>
+    <string name="name">Nama</string>
     <string name="email">Email</string>
     <string name="nim">NIM</string>
-    <string name="nohp">NoHp</string>
+    <string name="nohp">No Hp</string>
     <string name="alamat">Alamat</string>
+    <string name="delete_user">Delete User</string>
 </resources>
